@@ -71,7 +71,7 @@ def generate_job(manifold, d, T, method, geometry, tol):
 def loop_jobs(wait_time = 1.0):
     
     geomtries = ['Riemannian']
-    Ts = [50,100]
+    Ts = [100]
     methods = ["sgd", "rmsprop_momentum", "rmsprop", "adamax", "adam", "adagrad"]
     methods = methods + ["ProbGEORCE_LS", "ProbGEORCE_Adaptive"]
     #sphere
