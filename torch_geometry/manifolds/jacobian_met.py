@@ -13,7 +13,7 @@ Created on Fri May 24 10:51:29 2024
 import torch
 
 from torch import Tensor, vmap
-from torch.func import jacfwd
+from torch.func import jacrev
 
 from typing import Callable
 
@@ -54,8 +54,8 @@ class JacobianMetric(RiemannianManifold):
             x_samples = x_samples.reshape(-1,self.dim)
             
         # Hessian per sample
-        score_fn = jacfwd(log_prob_fn, randomness="same")   # θ -> d
-        hess_fn  = jacfwd(score_fn, randomness="same")             # θ -> d x d
+        score_fn = jacrev(log_prob_fn)   # θ -> d
+        hess_fn  = jacrev(score_fn)             # θ -> d x d
         
         Hs = torch.zeros((len(x_samples), self.dim, self.dim), device=x_samples.device)
 
