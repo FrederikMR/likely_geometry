@@ -40,11 +40,11 @@ def parse_args():
     # File-paths
     parser.add_argument('--runtime_type', default="metrics", #metrics, grid, runtime
                         type=str)
-    parser.add_argument('--model_type', default="ebm", #ebm, nf, ar, vae
+    parser.add_argument('--model_type', default="nf", #ebm, nf, ar, vae
                         type=str)
     parser.add_argument('--computation', default="bvp", #ivp, bvp, mean
                         type=str)
-    parser.add_argument('--method', default="Monge-Metric", #ProbGEORCE, Linear, SLERP, Fisher-Rao, Fisher-Rao-Reg, Jacobian-Metric, Jacobian-Metric-Reg, Inverse-Density, Generative-Metric, Monge-Metric
+    parser.add_argument('--method', default="Fisher-Rao", #ProbGEORCE, Linear, SLERP, Fisher-Rao, Fisher-Rao-Reg, Jacobian-Metric, Jacobian-Metric-Reg, Inverse-Density, Generative-Metric, Monge-Metric
                         type=str)
     parser.add_argument('--geodesic_method', default="ProbGEORCE_Adaptive", #ProbGEORCE_LS, ProbGEORCE_Adaptive, Adam, SGD, RMSprop, AdamW, LBFGS
                         type=str)

@@ -124,7 +124,8 @@ def riemannian_runtime()->None:
     
     args = parse_args()
     
-    save_path = ''.join((args.save_path, f'riemannian/{args.manifold}/'))
+    lam_str = str(args.lam).replace('.','d')
+    save_path = ''.join((args.save_path, f'{args.manifold}/{lam_str}/'))
     if not os.path.exists(save_path):
         os.makedirs(save_path)
         

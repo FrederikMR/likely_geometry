@@ -24,13 +24,13 @@ def submit_job():
 
 #%% Generate jobs
 
-def generate_job(manifold, d, T, method, geometry, tol):
+def generate_job(manifold, d, T, method, tol, lam):
 
     with open ('submit_runtime.sh', 'w') as rsh:
         rsh.write(f'''\
     #! /bin/bash
     #BSUB -q gpuv100
-    #BSUB -J {method}_{geometry[0]}{manifold}{d}_{T}
+    #BSUB -J {method}_{manifold}{d}_{lam}_{T}
     #BSUB -n 4
     #BSUB -gpu "num=1:mode=exclusive_process"
     #BSUB -W 24:00
@@ -48,7 +48,7 @@ def generate_job(manifold, d, T, method, geometry, tol):
     
     python3 runtime.py \\
         --manifold {manifold} \\
-        --lam 1.0 \\
+        --lam {lam} \\
         --dim {d} \\
         --T {T} \\
         --method {method} \\
@@ -69,9 +69,9 @@ def generate_job(manifold, d, T, method, geometry, tol):
 #%% Loop jobs
 
 def loop_jobs(wait_time = 1.0):
-    
-    geomtries = ['Riemannian']
+
     Ts = [100]
+    lams = [1.0]
     methods = ["sgd", "rmsprop_momentum", "rmsprop", "adamax", "adam", "adagrad"]
     methods = methods + ["ProbGEORCE_LS", "ProbGEORCE_Adaptive"]
     #sphere
@@ -84,15 +84,23 @@ def loop_jobs(wait_time = 1.0):
             "Cauchy": [[2],1e-4],
             "Pareto": [[2],1e-4],
             }
-    
-    for geo in geomtries:
+
+    Ts = [100]
+    lams = [0.0, 5.0, 10.0, 20.0, 50.0, 100.0]
+    methods = ["sgd", "rmsprop_momentum", "rmsprop", "adamax", "adam", "adagrad"]
+    methods = methods + ["ProbGEORCE_LS", "ProbGEORCE_Adaptive"]
+    #sphere
+    runs = {"Sphere": [[2,3,5,10,20,50,100, 250, 500, 1000],1e-4],
+            }
+
+    for lam in lams:
         for T in Ts:
             for man, vals in runs.items():
                 dims, tol = vals[0], vals[1]
                 for d in dims:
                     for m in methods:
                         time.sleep(wait_time+np.abs(np.random.normal(0.0,1.,1)[0]))
-                        generate_job(man, d, T, m, geo, tol)
+                        generate_job(man, d, T, m, tol, lam)
                         try:
                             submit_job()
                         except:
@@ -100,7 +108,7 @@ def loop_jobs(wait_time = 1.0):
                             try:
                                 submit_job()
                             except:
-                                print(f"Job script with {geo}, {T}, {man}, {m}, {d}, {tol} failed!")
+                                print(f"Job script with {lam}, {T}, {man}, {m}, {d}, {tol} failed!")
 
 #%% main
 
