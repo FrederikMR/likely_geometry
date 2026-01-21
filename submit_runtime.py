@@ -39,8 +39,8 @@ def generate_job(manifold, d, T, method, tol, lam):
     #BSUB -u fmry@dtu.dk
     #BSUB -B
     #BSUB -N
-    #BSUB -o sendmeemail/error_%J.out 
-    #BSUB -e sendmeemail/output_%J.err 
+    #BSUB -e ../error_folder/error_%J.out 
+    #BSUB -o ../output_folder/output_%J.err 
     
     module swap cuda/12.0
     module swap cudnn/v8.9.1.23-prod-cuda-12.X
