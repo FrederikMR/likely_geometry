@@ -90,7 +90,7 @@ def loop_jobs(wait_time = 1.0):
     methods = ["sgd", "rmsprop_momentum", "rmsprop", "adamax", "adam", "adagrad"]
     methods = methods + ["ProbGEORCE_LS", "ProbGEORCE_Adaptive"]
     #sphere
-    runs = {"Sphere": [[2,3,5,10,20,50,100, 250, 500, 1000],1e-4],
+    runs = {"Sphere": [[1000],1e-4],
             }
 
     for lam in lams:
