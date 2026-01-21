@@ -85,7 +85,7 @@ def loop_jobs(wait_time = 1.0):
             "Pareto": [[2],1e-4],
             }
     
-    #loop_over_jobs(lams, Ts, runs, methods, wait_time)
+    loop_over_jobs(lams, Ts, runs, methods, wait_time)
 
     Ts = [100]
     lams = [5.0, 10.0, 20.0, 50.0, 100.0]
