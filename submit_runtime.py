@@ -84,6 +84,23 @@ def loop_jobs(wait_time = 1.0):
             "Cauchy": [[2],1e-4],
             "Pareto": [[2],1e-4],
             }
+    
+    for lam in lams:
+        for T in Ts:
+            for man, vals in runs.items():
+                dims, tol = vals[0], vals[1]
+                for d in dims:
+                    for m in methods:
+                        time.sleep(wait_time+np.abs(np.random.normal(0.0,1.,1)[0]))
+                        generate_job(man, d, T, m, tol, lam)
+                        try:
+                            submit_job()
+                        except:
+                            time.sleep(100.0+np.abs(np.random.normal(0.0,1.,1)))
+                            try:
+                                submit_job()
+                            except:
+                                print(f"Job script with {lam}, {T}, {man}, {m}, {d}, {tol} failed!")
 
     Ts = [100]
     lams = [0.0, 5.0, 10.0, 20.0, 50.0, 100.0]
