@@ -45,7 +45,7 @@ def parse_args():
                         type=int)
     parser.add_argument('--lam', default=1.0,
                         type=float)
-    parser.add_argument('--method', default="ProbGEORCE_Adaptive",
+    parser.add_argument('--method', default="adam",
                         type=str)
     parser.add_argument('--jax_lr_rate', default=0.01,
                         type=float)
@@ -73,14 +73,15 @@ def parse_args():
 
 #%% Timing
 
-def estimate_method(Geodesic, z0, zT, M, base_length=None):
+def estimate_method(Geodesic, Geodesic_no_jit, z0, zT, M, base_length=None):
     
     args = parse_args()
     
     method = {} 
     print("Computing Estimates")
     zt = Geodesic(z0,zT)
-    reg_energy = Geodesic.reg_energy(zt[1:-1])
+    _ = Geodesic_no_jit(z0,zT)
+    reg_energy = Geodesic_no_jit.reg_energy(zt[1:-1])
     print("\t-Estimate Computed")
     timing = []
     timing = timeit.repeat(lambda: Geodesic(z0,zT)[0].block_until_ready(), 
@@ -214,7 +215,7 @@ def riemannian_runtime()->None:
                               tol=args.tol,
                               max_iter=args.max_iter,
                               )
-        methods['ProbGEORCE_LS'] = estimate_method(Geodesic, z0, zT, M, base_length)
+        methods['ProbGEORCE_LS'] = estimate_method(jit(Geodesic), Geodesic, z0, zT, M, base_length)
         save_times(methods, save_path)
     elif args.method == "ProbGEORCE_Adaptive":
         Geodesic = ProbGEORCE_Adaptive(M=M,
@@ -229,7 +230,7 @@ def riemannian_runtime()->None:
                                        lr_rate=0.01,
                                        eps=1e-8,
                                        )
-        methods['ProbGEORCE_Adaptive'] = estimate_method(Geodesic, z0, zT, M, base_length)
+        methods['ProbGEORCE_Adaptive'] = estimate_method(jit(Geodesic), Geodesic, z0, zT, M, base_length)
         save_times(methods, save_path)
     else:
         optimizer = getattr(optimizers, args.method)
@@ -243,7 +244,7 @@ def riemannian_runtime()->None:
                                    max_iter=args.max_iter,
                                    tol=args.tol
                                    )
-        methods[args.method] = estimate_method(Geodesic, z0, zT, M, base_length)
+        methods[args.method] = estimate_method(jit(Geodesic), Geodesic, z0, zT, M, base_length)
         save_times(methods, save_path)
     
     print(methods)
