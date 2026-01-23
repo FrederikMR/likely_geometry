@@ -75,8 +75,8 @@ def loop_jobs(wait_time = 1.0):
     methods = ["sgd", "rmsprop_momentum", "rmsprop", "adamax", "adam", "adagrad"]
     methods = methods + ["ProbGEORCE_LS", "ProbGEORCE_Adaptive"]
     #sphere
-    runs = {"Sphere": [[2,3,5,10,20,50,100, 250, 500, 1000],1e-4],
-            "Ellipsoid": [[2,3,5,10,20,50,100, 250, 500, 1000],1e-4],
+    runs = {"Sphere": [[2,3,5,10,20,50,100],1e-4],
+            "Ellipsoid": [[2,3,5,10,20,50,100],1e-4],
             "SPDN": [[2,3],1e-4],
             "T2": [[2],1e-4],
             "Gaussian": [[2],1e-4],
@@ -87,7 +87,7 @@ def loop_jobs(wait_time = 1.0):
     
     loop_over_jobs(lams, Ts, runs, methods, wait_time)
 
-    Ts = [100]
+    Ts = [10]
     lams = [5.0, 10.0, 20.0, 50.0, 100.0]
     methods = ["sgd", "rmsprop_momentum", "rmsprop", "adamax", "adam", "adagrad"]
     methods = methods + ["ProbGEORCE_LS", "ProbGEORCE_Adaptive"]
