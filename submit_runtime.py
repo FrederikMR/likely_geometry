@@ -85,14 +85,14 @@ def loop_jobs(wait_time = 1.0):
             "Pareto": [[2],1e-4],
             }
     
-    loop_over_jobs(lams, Ts, runs, methods, wait_time)
+    #loop_over_jobs(lams, Ts, runs, methods, wait_time)
 
-    Ts = [10]
+    Ts = [100]
     lams = [5.0, 10.0, 20.0, 50.0, 100.0]
     methods = ["sgd", "rmsprop_momentum", "rmsprop", "adamax", "adam", "adagrad"]
     methods = methods + ["ProbGEORCE_LS", "ProbGEORCE_Adaptive"]
     #sphere
-    runs = {"Sphere": [[100],1e-4],
+    runs = {"Sphere": [[10],1e-4],
             }
     
     loop_over_jobs(lams, Ts, runs, methods, wait_time)
