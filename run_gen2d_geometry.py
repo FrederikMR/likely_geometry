@@ -40,11 +40,11 @@ def parse_args():
     # File-paths
     parser.add_argument('--runtime_type', default="metrics", #metrics, grid, runtime
                         type=str)
-    parser.add_argument('--model_type', default="nf", #ebm, nf, ar, vae
+    parser.add_argument('--model_type', default="ebm", #ebm, nf, ar, vae
                         type=str)
     parser.add_argument('--computation', default="bvp", #ivp, bvp, mean
                         type=str)
-    parser.add_argument('--method', default="Fisher-Rao", #ProbGEORCE, Linear, SLERP, Fisher-Rao, Fisher-Rao-Reg, Jacobian-Metric, Jacobian-Metric-Reg, Inverse-Density, Generative-Metric, Monge-Metric
+    parser.add_argument('--method', default="Monge-Metric", #ProbGEORCE, Linear, SLERP, Fisher-Rao, Fisher-Rao-Reg, Jacobian-Metric, Jacobian-Metric-Reg, Inverse-Density, Generative-Metric, Monge-Metric
                         type=str)
     parser.add_argument('--geodesic_method', default="ProbGEORCE_Adaptive", #ProbGEORCE_LS, ProbGEORCE_Adaptive, Adam, SGD, RMSprop, AdamW, LBFGS
                         type=str)
@@ -582,13 +582,13 @@ def load_linear_interpolation(args, reg_eval):
     
     M = Linear()
     
-    return lambda x,v: M.ivp_geodesic(x,v,args.N_grid), lambda x1,x2: M.bvp_geodesic(x1,x2,args.N_grid), lambda data: M.mean_com(data, args.N_grid)
+    return lambda x,v: M.ivp_geodesic(x,v,args.N_grid), lambda x1,x2: M.bvp_geodesic(x1,x2,args.N_grid), lambda data: M.mean_com(data, N_grid=args.N_grid)
 
 def load_spherical_interpolation(args, reg_eval):
     
     M = Spherical(eps=1e-8)
     
-    return lambda x,v: M.ivp_geodesic(x,v,args.N_grid), lambda x1,x2: M.bvp_geodesic(x1,x2,args.N_grid), lambda data: M.mean_com(data, args.N_grid)
+    return lambda x,v: M.ivp_geodesic(x,v,args.N_grid), lambda x1,x2: M.bvp_geodesic(x1,x2,args.N_grid), lambda data: M.mean_com(data, N_grid=args.N_grid)
 
 def load_fisher_rao(args, reg_eval):
     

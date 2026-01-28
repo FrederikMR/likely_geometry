@@ -57,7 +57,7 @@ class MongeMetric(RiemannianManifold):
         # Batch computation
         scores = score_fn(x_samples)  # (N, d)
         
-        val = torch.einsum('...i,...i->...', scores, scores)
+        val = torch.einsum('...i,...j->...ij', scores, scores)
         
         I = torch.eye(self.dim, device=x_samples.device)            # shape (d, d)
         if x_samples.ndim > 1:
@@ -66,6 +66,7 @@ class MongeMetric(RiemannianManifold):
             I_batch = I
 
         if x_samples.ndim > 1:
-            return (I_batch + self.alpha * val[...,None,None] * I_batch).squeeze()
+            #return (I_batch + (self.alpha**2) * val[...,None,None]).squeeze()
+            return (I_batch + (self.alpha**2) * val).squeeze()
         else:
-            return (I_batch + self.alpha * val * I_batch).squeeze()
+            return (I_batch + (self.alpha**2) * val).squeeze()
