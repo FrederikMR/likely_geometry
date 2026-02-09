@@ -1,7 +1,7 @@
 # A Likely Geometry of Generative Models
 Likely Geometry
 
-[pga_mod2_wide.pdf](https://github.com/user-attachments/files/25181487/pga_mod2_wide.pdf)
+![pga_mod2_wide.pdf](https://github.com/user-attachments/files/25181487/pga_mod2_wide.pdf)
 
 
 
