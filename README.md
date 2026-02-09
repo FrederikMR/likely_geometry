@@ -1,9 +1,13 @@
 # A Likely Geometry of Generative Models
-Likely Geometry
+This GitHub contains the code for the paper "A Likely Geometry of Generative Models" that considers interpolation and other statistics on generative models as a Newtonian system on a Riemannian manifold.
 
 <p align="center">
   <img src="https://github.com/user-attachments/files/25181487/pga_mod2_wide.pdf" width="800" />
 </p>
+
+
+
+## Application
 
 
 
