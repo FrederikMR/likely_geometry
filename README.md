@@ -7,9 +7,16 @@ This GitHub contains the code for the paper "A Likely Geometry of Generative Mod
 
 
 
-## Application
+## Application to diffusion models
+
+In the paper, we apply our method to ControlNet. The code for this can be found at:
+
+https://github.com/FrederikMR/controlnet_interpolation
 
 
+## Reference
+
+If you want to use the algorithm or the method proposed in the paper for scientific purposes, please cite:
 
 
     @misc{rygaard2026likelygeometrygenerativemodels,
