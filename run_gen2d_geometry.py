@@ -38,7 +38,7 @@ from torch_geometry.prob_means import ProbGEORCEFM_Adaptive, ProbGEORCEFM_Euclid
 def parse_args():
     parser = argparse.ArgumentParser()
     # File-paths
-    parser.add_argument('--runtime_type', default="metrics", #metrics, grid, runtime
+    parser.add_argument('--runtime_type', default="ivp_gif", #metrics, grid, runtime, ivp_gif
                         type=str)
     parser.add_argument('--model_type', default="ebm", #ebm, nf, ar, vae
                         type=str)
@@ -978,6 +978,21 @@ def compute_grid_energy(
 
     return grid_energy
 
+def compute_ivp_gif(reg_eval,
+                    x1, 
+                    args,
+                    ):
+    
+    M = nEuclidean(dim=2)
+    Mlambda = LambdaManifold(M=M, S=reg_eval, lam=args.lam)
+    
+    theta = torch.linspace(0, 2*torch.pi,10, device=args.device)
+    v = torch.stack([torch.cos(theta), torch.sin(theta)]).T
+
+    curve = torch.stack([Mlambda.Exp_ode_end_time(x1, v0, T=1000, end_time=100.0) for v0 in v])
+    
+    return curve
+
 
 #%% main
 
@@ -1039,5 +1054,18 @@ if __name__ == "__main__":
         
         with open(save_path, "wb") as f:  # wb = write binary
             pickle.dump(result, f)
+    elif args.runtime_type == "ivp_gif":
+        
+        save_path = ''.join((save_path, f"{args.model_type}_ivp_gif.pkl"))
+        
+        reg_eval, x1, x2, data_sample, grid = load_model(args)
+        curve = compute_ivp_gif(reg_eval, x1, args)
+
+        result = {'ode_curve': curve,
+                  }
+        
+        with open(save_path, "wb") as f:  # wb = write binary
+            pickle.dump(result, f)
+        
     else:
         raise ValueError(f"Invalid runtime_type: {args.runtime_type}")

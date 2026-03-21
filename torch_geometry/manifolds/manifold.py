@@ -399,6 +399,33 @@ class LambdaManifold(ABC):
         zs = zs[:,:dim]
         
         return zs
+    
+    def Exp_ode_end_time(self,
+                z:torch.Tensor,
+                v:torch.Tensor,
+                T:int=100,
+                end_time:float=1.0,
+                )->torch.Tensor:
+        
+        def dif_fun(t,y):
+            
+            z = y[:self.M.dim]
+            v = y[self.M.dim:]
+            
+            return self.geodesic_equation(z, v)
+        
+        dim = len(z)
+        
+        t_grid = torch.linspace(0., end_time, T, device=z.device) 
+        zs = odeint(dif_fun, 
+                    torch.hstack((z, v)), 
+                    t_grid, 
+                    method='rk4',
+                    )
+        
+        zs = zs[:,:dim]
+        
+        return zs
 
     def energy(self, 
                gamma:torch.Tensor,
