@@ -42,9 +42,10 @@ def generate_job(runtime_type, model_type, computation, method, geodesic_method,
     #BSUB -o ../output_folder/output_%J.out 
     #BSUB -e ../error_folder/error_%J.err 
     
-    module swap python3/3.10.12
     module swap cuda/12.0
     module swap cudnn/v8.9.1.23-prod-cuda-12.X
+    source /work3/fmry/miniconda3/bin/activate
+    conda activate section_talk_03_03_26
     
     python3 run_gen2d_geometry.py \\
         --runtime_type {runtime_type} \\
