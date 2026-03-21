@@ -83,7 +83,7 @@ def loop_jobs(wait_time = 1.0):
     #run_model("metrics", model_type, computation, method, ['ProbGEORCE_Adaptive'], [20.0], wait_time)
     #run_model("grid", ['ebm'], ['bvp'], ['ProbGEORCE'], ['ProbGEORCE_Adaptive'], [0.0, 5.0, 20.0, 100.0], wait_time)
     #run_model("runtime", model_type, ['bvp'], ['ProbGEORCE'], geodesic_method, [0.1, 1.0, 2.0, 5.0, 10.0, 20.0, 50.0, 100.0], wait_time)
-    run_model("ivp_grid", ['ebm', 'nf', 'ar', 'vae'], ['bvp'], ['ProbGEORCE'], ['ProbGEORCE_Adaptive'], [20.0], wait_time)
+    run_model("ivp_gif", ['ebm', 'nf', 'ar', 'vae'], ['bvp'], ['ProbGEORCE'], ['ProbGEORCE_Adaptive'], [20.0], wait_time)
     return
                             
 def run_model(runtime_type, model_type, computation, method, geodesic_method, lams, wait_time):
