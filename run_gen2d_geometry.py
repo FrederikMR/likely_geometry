@@ -989,7 +989,7 @@ def compute_ivp_gif(reg_eval,
     theta = torch.linspace(0, 2*torch.pi,10, device=args.device)
     v = torch.stack([torch.cos(theta), torch.sin(theta)]).T
 
-    curve = torch.stack([Mlambda.Exp_ode_end_time(x1, v0, T=10_000, end_time=100.0) for v0 in v])
+    curve = torch.stack([Mlambda.Exp_ode_end_time(x1, v0, T=1_000, end_time=100.0) for v0 in v])
     
     return curve
 
