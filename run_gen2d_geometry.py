@@ -140,7 +140,9 @@ def load_ebm(model_path:str='models/', device:str="cpu"):
     ebm_grid = torch.stack([ebm_xv.flatten(), ebm_yv
                             .flatten()], dim=1)
     
-    return ebm_reg_fun, x1, x2, data_sample, ebm_grid 
+    x0_ivp = torch.tensor([0.5, -0.5])   # top of moon 1
+    
+    return ebm_reg_fun, x1, x2, data_sample, ebm_grid, x0_ivp
 
 def load_nf(model_path:str='models/', device:str="cpu"):
     
@@ -174,7 +176,9 @@ def load_nf(model_path:str='models/', device:str="cpu"):
     nf_grid_size = torch.cat([nf_xv.unsqueeze(2), nf_yv.unsqueeze(2)], 2).view(-1, 2)
     nf_grid_size = nf_grid_size.to(args.device)
     
-    return nf_reg_fun, x1, x2, data_sample, nf_grid_size
+    x0_ivp = torch.tensor([-1.6, -1.2])
+    
+    return nf_reg_fun, x1, x2, data_sample, nf_grid_size, x0_ivp
 
 def load_ar(model_path:str='models/', device:str="cpu"):
     
@@ -241,7 +245,9 @@ def load_ar(model_path:str='models/', device:str="cpu"):
     ar_xv, ar_yv = torch.meshgrid(x1_lin, x2_lin, indexing="xy")
     ar_grid = torch.stack([ar_xv.flatten(), ar_yv.flatten()], dim=-1)
     
-    return ar_reg_fun, x1, x2, data_sample, ar_grid
+    x0_ivp = torch.tensor([0.0, math.sin(0.0)])
+    
+    return ar_reg_fun, x1, x2, data_sample, ar_grid, x0_ivp
 
 def load_vae(model_path:str='models/', device:str="cpu"):
     
@@ -468,8 +474,11 @@ def load_vae(model_path:str='models/', device:str="cpu"):
     vae_xv, vae_yv = torch.meshgrid(x_coords, y_coords, indexing="xy")
     vae_grid = torch.stack([vae_xv.flatten(), vae_yv.flatten(), torch.zeros_like(vae_yv.flatten())], dim=1)
     vae_grid = vae_model.h(vae_grid)
+    
+    x0_space = torch.tensor([math.cos(0.75*math.pi), math.sin(0.75*math.pi), 0.0])   # top of moon 1
+    x0_ivp = vae_model.h(x0_space)
 
-    return vae_reg_fun, x1, x2, data_sample, vae_grid
+    return vae_reg_fun, x1, x2, data_sample, vae_grid, x0_ivp
 
 def load_model(args):
     
@@ -1009,7 +1018,7 @@ if __name__ == "__main__":
             
         save_path = ''.join((save_path, f"{args.model_type}_{args.computation}_{args.method}_{args.geodesic_method}.pkl"))
         
-        reg_eval, x1, x2, data_sample, grid = load_model(args)
+        reg_eval, x1, x2, data_sample, grid, x0_ivp = load_model(args)
         
         ivp_geodesic, bvp_geodesic, mean_com = load_method(args, reg_eval)
         
@@ -1026,7 +1035,7 @@ if __name__ == "__main__":
         lam_str = str(args.lam).replace('.', 'd')
         save_path = ''.join((save_path, f"{args.model_type}_{args.computation}_{args.method}_{lam_str}_{args.geodesic_method}.pkl"))
         
-        reg_eval, x1, x2, data_sample, grid = load_model(args)
+        reg_eval, x1, x2, data_sample, grid, x0_ivp = load_model(args)
         
         ivp_geodesic, bvp_geodesic, mean_com = load_method(args, reg_eval)
         
@@ -1043,7 +1052,7 @@ if __name__ == "__main__":
         lam_str = str(args.lam).replace('.', 'd')
         save_path = ''.join((save_path, f"{args.model_type}_{lam_str}.pkl"))
         
-        reg_eval, x1, x2, data_sample, grid = load_model(args)
+        reg_eval, x1, x2, data_sample, grid, x0_ivp = load_model(args)
         
         grid_energy = compute_grid_energy(args, data_sample, grid, reg_eval)
         
@@ -1058,8 +1067,9 @@ if __name__ == "__main__":
         
         save_path = ''.join((save_path, f"{args.model_type}_ivp_gif.pkl"))
         
-        reg_eval, x1, x2, data_sample, grid = load_model(args)
-        curve = compute_ivp_gif(reg_eval, x2, args)
+        reg_eval, x1, x2, data_sample, grid, x0_ivp = load_model(args)
+        
+        curve = compute_ivp_gif(reg_eval, x0_ivp, args)
 
         result = {'ode_curve': curve,
                   }
