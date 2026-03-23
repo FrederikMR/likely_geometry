@@ -140,7 +140,7 @@ def load_ebm(model_path:str='models/', device:str="cpu"):
     ebm_grid = torch.stack([ebm_xv.flatten(), ebm_yv
                             .flatten()], dim=1)
     
-    x0_ivp = torch.tensor([0.5, -0.5])   # top of moon 1
+    x0_ivp = torch.tensor([0.5, -0.5], device=args.device)   # top of moon 1
     
     return ebm_reg_fun, x1, x2, data_sample, ebm_grid, x0_ivp
 
@@ -176,7 +176,7 @@ def load_nf(model_path:str='models/', device:str="cpu"):
     nf_grid_size = torch.cat([nf_xv.unsqueeze(2), nf_yv.unsqueeze(2)], 2).view(-1, 2)
     nf_grid_size = nf_grid_size.to(args.device)
     
-    x0_ivp = torch.tensor([-1.6, -1.2])
+    x0_ivp = torch.tensor([-1.6, -1.2], device=args.device)
     
     return nf_reg_fun, x1, x2, data_sample, nf_grid_size, x0_ivp
 
@@ -245,7 +245,7 @@ def load_ar(model_path:str='models/', device:str="cpu"):
     ar_xv, ar_yv = torch.meshgrid(x1_lin, x2_lin, indexing="xy")
     ar_grid = torch.stack([ar_xv.flatten(), ar_yv.flatten()], dim=-1)
     
-    x0_ivp = torch.tensor([0.0, math.sin(0.0)])
+    x0_ivp = torch.tensor([0.0, math.sin(0.0)], device=args.device)
     
     return ar_reg_fun, x1, x2, data_sample, ar_grid, x0_ivp
 
@@ -475,7 +475,7 @@ def load_vae(model_path:str='models/', device:str="cpu"):
     vae_grid = torch.stack([vae_xv.flatten(), vae_yv.flatten(), torch.zeros_like(vae_yv.flatten())], dim=1)
     vae_grid = vae_model.h(vae_grid)
     
-    x0_space = torch.tensor([math.cos(0.75*math.pi), math.sin(0.75*math.pi), 0.0])   # top of moon 1
+    x0_space = torch.tensor([math.cos(0.75*math.pi), math.sin(0.75*math.pi), 0.0], device=args.device)   # top of moon 1
     x0_ivp = vae_model.h(x0_space)
 
     return vae_reg_fun, x1, x2, data_sample, vae_grid, x0_ivp
