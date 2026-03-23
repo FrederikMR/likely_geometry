@@ -1059,7 +1059,7 @@ if __name__ == "__main__":
         save_path = ''.join((save_path, f"{args.model_type}_ivp_gif.pkl"))
         
         reg_eval, x1, x2, data_sample, grid = load_model(args)
-        curve = compute_ivp_gif(reg_eval, x1, args)
+        curve = compute_ivp_gif(reg_eval, x2, args)
 
         result = {'ode_curve': curve,
                   }
