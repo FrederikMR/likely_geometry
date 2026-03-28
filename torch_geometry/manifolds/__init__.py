@@ -22,3 +22,5 @@ from .nParaboloid import nParaboloid
 from .inverse_density import InverseDensity
 from .generative_metric import GenerativeMetric
 from .monge_metric import MongeMetric
+from .bethune import BethuneMetric
+from .bethune_inverse import BethuneInverseMetric

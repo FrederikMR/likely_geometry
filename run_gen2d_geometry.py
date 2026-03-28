@@ -27,7 +27,7 @@ import pickle
 
 from typing import List, Any
 
-from torch_geometry.manifolds import LambdaManifold, nEuclidean, FisherRao, JacobianMetric, Spherical, Linear, InverseDensity, GenerativeMetric, MongeMetric
+from torch_geometry.manifolds import LambdaManifold, nEuclidean, FisherRao, JacobianMetric, Spherical, Linear, InverseDensity, GenerativeMetric, MongeMetric, BethuneMetric, BethuneInverseMetric
 from torch_geometry.prob_geodesics import TorchOptimizers_Euclidean
 from torch_geometry.prob_geodesics import ProbGEORCE_Adaptive, ProbGEORCE_Euclidean_Adaptive, ProbGEORCE_Euclidean_Adaptive_FixedLam, ProbGEORCE_Euclidean
 
@@ -44,7 +44,7 @@ def parse_args():
                         type=str)
     parser.add_argument('--computation', default="bvp", #ivp, bvp, mean
                         type=str)
-    parser.add_argument('--method', default="Monge-Metric", #ProbGEORCE, Linear, SLERP, Fisher-Rao, Fisher-Rao-Reg, Jacobian-Metric, Jacobian-Metric-Reg, Inverse-Density, Generative-Metric, Monge-Metric
+    parser.add_argument('--method', default="Bethune-Inverse-Metric", #ProbGEORCE, Linear, SLERP, Fisher-Rao, Fisher-Rao-Reg, Jacobian-Metric, Jacobian-Metric-Reg, Inverse-Density, Generative-Metric, Monge-Metric, Bethune-Inverse-Metric, Bethune-Metric
                         type=str)
     parser.add_argument('--geodesic_method', default="ProbGEORCE_Adaptive", #ProbGEORCE_LS, ProbGEORCE_Adaptive, Adam, SGD, RMSprop, AdamW, LBFGS
                         type=str)
@@ -775,6 +775,74 @@ def load_monge_met(args, reg_eval):
     
     return M.Exp_ode, bvp_geodesic, mean_com
 
+def load_bethune_met(args, reg_eval):
+    
+    M = BethuneMetric(log_prob = lambda x: -reg_eval(x), alpha=1.0, beta=1.0)
+    
+    bvp_geodesic = ProbGEORCE_Adaptive(M=M,
+                                       reg_fun=lambda x: torch.zeros(1, device=args.device).squeeze(),
+                                       init_fun=None,
+                                       lam=0.0,
+                                       N=args.N_grid,
+                                       tol=args.tol,
+                                       max_iter=args.max_iter,
+                                       lr_rate=0.01,
+                                       beta1=0.5,
+                                       beta2=0.5,
+                                       eps=1e-8,
+                                       device=args.device,
+                                       )    
+    
+    mean_com = ProbGEORCEFM_Adaptive(M=M,
+                                     reg_fun=lambda x: torch.zeros(1, device=args.device).squeeze(),
+                                     init_fun=None,
+                                     lam=0.0,
+                                     N_grid=args.N_grid,
+                                     tol=args.tol,
+                                     max_iter=args.max_iter,
+                                     lr_rate=0.01,
+                                     beta1=0.5,
+                                     beta2=0.5,
+                                     eps=1e-8,
+                                     device=args.device,
+                                     )
+    
+    return M.Exp_ode, bvp_geodesic, mean_com
+
+def load_bethune_inverse_met(args, reg_eval):
+    
+    M = BethuneInverseMetric(log_prob = lambda x: -reg_eval(x), alpha=1.0, beta=1.0)
+    
+    bvp_geodesic = ProbGEORCE_Adaptive(M=M,
+                                       reg_fun=lambda x: torch.zeros(1, device=args.device).squeeze(),
+                                       init_fun=None,
+                                       lam=0.0,
+                                       N=args.N_grid,
+                                       tol=args.tol,
+                                       max_iter=args.max_iter,
+                                       lr_rate=0.01,
+                                       beta1=0.5,
+                                       beta2=0.5,
+                                       eps=1e-8,
+                                       device=args.device,
+                                       )    
+    
+    mean_com = ProbGEORCEFM_Adaptive(M=M,
+                                     reg_fun=lambda x: torch.zeros(1, device=args.device).squeeze(),
+                                     init_fun=None,
+                                     lam=0.0,
+                                     N_grid=args.N_grid,
+                                     tol=args.tol,
+                                     max_iter=args.max_iter,
+                                     lr_rate=0.01,
+                                     beta1=0.5,
+                                     beta2=0.5,
+                                     eps=1e-8,
+                                     device=args.device,
+                                     )
+    
+    return M.Exp_ode, bvp_geodesic, mean_com
+
 def load_method(args, reg_eval):
     
     if args.method == "ProbGEORCE":
@@ -793,6 +861,10 @@ def load_method(args, reg_eval):
         return load_generative_met(args, reg_eval)
     elif "Monge-Metric" == args.method:
         return load_monge_met(args, reg_eval)
+    elif "Bethune-Metric" == args.method:
+        return load_bethune_met(args, reg_eval)
+    elif "Bethune-Inverse-Metric" == args.method:
+        return load_bethune_inverse_met(args, reg_eval)
     else:
         raise ValueError(f"Invalid method: {args.method}")
         
@@ -998,7 +1070,7 @@ def compute_ivp_gif(reg_eval,
     theta = torch.linspace(0, 2*torch.pi,10, device=args.device)
     v = torch.stack([torch.cos(theta), torch.sin(theta)]).T
 
-    curve = torch.stack([Mlambda.Exp_ode_end_time(x1, v0, T=1_000, end_time=25.0) for v0 in v])
+    curve = torch.stack([Mlambda.Exp_ode_end_time(x1, v0, T=1_000, end_time=30.0) for v0 in v])
     
     return curve
 
