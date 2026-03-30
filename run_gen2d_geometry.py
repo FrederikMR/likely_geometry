@@ -777,7 +777,7 @@ def load_monge_met(args, reg_eval):
 
 def load_bethune_met(args, reg_eval):
     
-    M = BethuneMetric(log_prob = lambda x: -reg_eval(x), alpha=1.0, beta=1.0)
+    M = BethuneMetric(log_prob = lambda x: -reg_eval(x), alpha=1.0, beta=1.0, dim=2)
     
     bvp_geodesic = ProbGEORCE_Adaptive(M=M,
                                        reg_fun=lambda x: torch.zeros(1, device=args.device).squeeze(),
@@ -811,7 +811,7 @@ def load_bethune_met(args, reg_eval):
 
 def load_bethune_inverse_met(args, reg_eval):
     
-    M = BethuneInverseMetric(log_prob = lambda x: -reg_eval(x), alpha=1.0, beta=1.0)
+    M = BethuneInverseMetric(log_prob = lambda x: -reg_eval(x), alpha=1.0, beta=1.0, dim=2)
     
     bvp_geodesic = ProbGEORCE_Adaptive(M=M,
                                        reg_fun=lambda x: torch.zeros(1, device=args.device).squeeze(),

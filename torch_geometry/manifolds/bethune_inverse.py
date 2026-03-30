@@ -26,10 +26,12 @@ class BethuneInverseMetric(RiemannianManifold):
                  log_prob:Callable[[torch.Tensor], torch.Tensor],
                  alpha:float=1.0,
                  beta:float=1.0,
+                 dim:int=2,
                  )->None:
 
         self.alpha = alpha
         self.beta = beta
+        self.dim = dim
 
         super().__init__(G=lambda x: self.metric(log_prob, x), f=lambda x: x, invf= lambda x: x)
         
