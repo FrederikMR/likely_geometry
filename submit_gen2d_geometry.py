@@ -75,10 +75,9 @@ def loop_jobs(wait_time = 1.0):
     
     model_type = ['ebm', 'nf', 'ar', 'vae']
     computation = ['ivp', 'bvp', 'mean']
-    method = ['ProbGEORCE', 'Linear', 'SLERP', 'Fisher-Rao', 'Fisher-Rao-Reg', 'Jacobian-Metric', 'Jacobian-Metric-Reg', 'Inverse-Density', 'Generative-Metric', 'Monge-Metric']
+    method = ['ProbGEORCE', 'Linear', 'SLERP', 'Fisher-Rao', 'Fisher-Rao-Reg', 'Jacobian-Metric', 'Jacobian-Metric-Reg', 'Inverse-Density', 'Generative-Metric', 'Monge-Metric',
+              'Bethune-Metric','Bethune-Inverse-Metric']
     geodesic_method = ['ProbGEORCE_Adaptive', 'ProbGEORCE_LS', 'Adam', 'SGD', 'RMSprop', 'AdamW', 'LBFGS']
-    
-    method = ['Bethune-Metric','Bethune-Inverse-Metric']
 
     #model_type = ['ar']
     #computation = ['ivp']
