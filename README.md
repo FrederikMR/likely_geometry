@@ -1,6 +1,6 @@
 # A Likely Geometry of Generative Models.
 
-Experimential results on ControlNet for method described in https://github.com/FrederikMR/likely_geometry.
+Experimential results for the paper "A Likely Geometry of Generative Models" (https://arxiv.org/abs/2510.26266).
 
 <p align="center">
   <img src="https://github.com/user-attachments/files/25181960/pgeorce_noise_mean_grid_left_mod.pdf" width="700" />
