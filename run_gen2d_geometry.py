@@ -56,9 +56,9 @@ def parse_args():
                         type=int)
     parser.add_argument('--N_grid', default=100,
                         type=int)
-    parser.add_argument('--max_iter', default=100, #1000
+    parser.add_argument('--max_iter', default=1000, #1000
                         type=int)
-    parser.add_argument('--tol', default=0.0, #1e-4
+    parser.add_argument('--tol', default=1e-4, #1e-4
                         type=float)
     parser.add_argument('--number_repeats', default=2,
                         type=int)
